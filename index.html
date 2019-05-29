@@ -1,36 +1,55 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Ember.js • TodoMVC</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
+
+<head>
+  <meta charset="utf-8">
+  <title>Ember.js • TodoMVC</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- This is our main app template - todos -->
+  <script type="text/x-handlebars" data-template-name="todos">
     <section id="todoapp">
       <header id="header">
         <h1>todos</h1>
-        <input type="text" id="new-todo" placeholder="What needs to be done?" />
+        {{input
+          type="text"
+          id="new-todo"
+          placeholder="What needs to be done?"
+          value=newTitle
+          action="createTodo"}}
       </header>
-
+  
       <section id="main">
         <ul id="todo-list">
-          <li class="completed">
-            <input type="checkbox" class="toggle">
-            <label>Learn Ember.js</label><button class="destroy"></button>
-          </li>
-          <li>
-            <input type="checkbox" class="toggle">
-            <label>...</label><button class="destroy"></button>
-          </li>
-          <li>
-            <input type="checkbox" class="toggle">
-            <label>Profit!</label><button class="destroy"></button>
-          </li>
-        </ul>
+          
+          {{!-- 1. Ember.js has created a controller for us and set the controller's model property
+                    to our route's model. The template loops over the controller's model property.
+                    Because we don't need custom behavior for this controller yet,
+                    we can use the default object provided by the framework. --}}
 
+          {{!-- 2. wrap each todo in its own controller by
+                    adding an itemController argument to the {{each}} Handlebars helper. --}}
+          
+          {{!-- 3. the controller for each item will be according to the value we supplied: 'todo',
+                   hence the controller name will be TodoController--}}
+
+          {{#each todo in model itemController="todo"}} 
+            {{!-- apply a CSS class to this element when a todo's isCompleted property is true --}}
+            <li {{bind-attr class="todo.isCompleted:completed"}}>
+              {{!-- When a user clicks this input,
+               it will set the value of the controller's isCompleted property to either true or false --}}
+              {{input type="checkbox" checked="todo.isCompleted" class="toggle"}}
+              <label>{{todo.title}}</label><button class="destroy"></button>
+            </li>
+          {{/each}}
+
+        </ul>
+  
         <input type="checkbox" id="toggle-all">
       </section>
-
+  
       <footer id="footer">
         <span id="todo-count">
           <strong>2</strong> todos left
@@ -46,20 +65,28 @@
             <a href="completed">Completed</a>
           </li>
         </ul>
-
+  
         <button id="clear-completed">
           Clear completed (1)
         </button>
       </footer>
     </section>
-
+  
     <footer id="info">
       <p>Double-click to edit a todo</p>
     </footer>
-    
-    <script src="js/libs/jquery-1.11.2.min.js"></script>
-    <script src="js/libs/handlebars-v1.3.0.js"></script>
-    <script src="js/libs/ember.js"></script>
-    <script src="js/libs/ember-data.js"></script>
-  </body>
+  </script>
+
+  <script src="js/libs/jquery-1.11.2.min.js"></script>
+  <script src="js/libs/handlebars-v1.3.0.js"></script>
+  <script src="js/libs/ember.js"></script>
+  <script src="js/libs/ember-data.js"></script>
+  <!-- ... Ember.js and other JavaScript dependencies ... -->
+  <script src="js/application.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/models/todo.js"></script>
+   <script src="js/controllers/todos_controller.js"></script>
+   <script src="js/controllers/todo_controller.js"></script>
+</body>
+
 </html>
