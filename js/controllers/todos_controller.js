@@ -19,7 +19,7 @@ Todos.TodosController = Ember.ArrayController.extend({
         },
         /** filterBy method is part of the ArrayController API . 
             it returns an instance of EmberArray which contains only the items for which the callback returns true.*/
-        
+
         /** invoke will execute a method on each object in the Array if the method exists on that object. */
         clearCompleted: function () {
             var completed = this.filterBy('isCompleted', true);
@@ -44,9 +44,16 @@ Todos.TodosController = Ember.ArrayController.extend({
         var remaining = this.get('remaining');
         return remaining === 1 ? 'item' : 'items'
     }.property('remaining'),
-    
-    allAreDone: function(key, value){
-        //  the !! reduces the examined value into a Boolean.
-        return !! this.get('length') && this.isEvery('isCompleted');
+
+    allAreDone: function (key, value) {
+        console.log(value);
+        if (value === undefined) {
+            //  the !! reduces the examined value into a Boolean.
+            return !!this.get('length') && this.isEvery('isCompleted');
+        }else{
+            this.setEach('isCompleted', value);
+            this.invoke('save');
+            return value;
+        }
     }.property('@each.isCompleted')
 });
